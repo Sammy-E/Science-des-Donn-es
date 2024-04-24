@@ -54,20 +54,88 @@ plt.title('Weight of Professional Soccer Players (lbs)')
 plt.pie(weights, labels=label, explode=explode, pctdistance=0.8,autopct='%.2f %%')
 plt.show() 
 
-#Box and Whiskers Chart 
+#Age Box and Whiskers Chart 
 plt.figure(figsize=(5,8), dpi=100)
 
 plt.style.use('default')
 
-barcelona = fifa.loc[fifa.Club == "FC Barcelona"]['Overall']
-madrid = fifa.loc[fifa.Club == "Real Madrid"]['Overall']
-revs = fifa.loc[fifa.Club == "New England Revolution"]['Overall']
+Egypt = nba.loc[nba.country == "Egypt"]['age']
+Tunisia = nba.loc[nba.country == "Tunisia"]['age']
+Mali = nba.loc[nba.country == "Mali"]['age'] 
+Senegal = nba.loc[nba.country == "Senegal"]['age']
+Nigeria = nba.loc[nba.country == "Nigeria"]['age']
+Cameroon = nba.loc[nba.country == "Cameroon"]['age']
+Congo = nba.loc[nba.country == "Congo"]['age']
+Democratic Republic of Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['age']
+Haiti = nba.loc[nba.country == "Haiti"]['age']
 
-#bp = plt.boxplot([barcelona, madrid, revs], labels=['a','b','c'], boxprops=dict(facecolor='red'))
-bp = plt.boxplot([barcelona, madrid, revs], labels=['FC Barcelona','Real Madrid','NE Revolution'], patch_artist=True, medianprops={'linewidth': 2})
+#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
+bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
 
-plt.title('Professional Soccer Team Comparison')
-plt.ylabel('FIFA Overall Rating')
+plt.title('Professional NBA Team Comparison')
+plt.ylabel('NBA Age Comparison')
+
+for box in bp['boxes']:
+    # change outline color
+    box.set(color='#4286f4', linewidth=2)
+    # change fill color
+    box.set(facecolor = '#e0e0e0' )
+    # change hatch
+    #box.set(hatch = '/')
+    
+plt.show() 
+
+#Height Box and Whiskers Chart 
+plt.figure(figsize=(5,8), dpi=100)
+
+plt.style.use('default')
+
+Egypt = nba.loc[nba.country == "Egypt"]['player_height']
+Tunisia = nba.loc[nba.country == "Tunisia"]['player_height']
+Mali = nba.loc[nba.country == "Mali"]['player_height'] 
+Senegal = nba.loc[nba.country == "Senegal"]['player_height']
+Nigeria = nba.loc[nba.country == "Nigeria"]['player_height']
+Cameroon = nba.loc[nba.country == "Cameroon"]['player_height']
+Congo = nba.loc[nba.country == "Congo"]['player_height']
+Democratic Republic of Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['player_height']
+Haiti = nba.loc[nba.country == "Haiti"]['player_height']
+
+#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
+bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
+
+plt.title('Professional NBA Team Comparison')
+plt.ylabel('NBA Height Rating')
+
+for box in bp['boxes']:
+    # change outline color
+    box.set(color='#4286f4', linewidth=2)
+    # change fill color
+    box.set(facecolor = '#e0e0e0' )
+    # change hatch
+    #box.set(hatch = '/')
+    
+plt.show() 
+
+#Weight Box and Whiskers Chart 
+plt.figure(figsize=(5,8), dpi=100)
+
+plt.style.use('default')
+
+Egypt = nba.loc[nba.country == "Egypt"]['player_weight']
+Tunisia = nba.loc[nba.country == "Tunisia"]['player_weight']
+Mali = nba.loc[nba.country == "Mali"]['player_weight'] 
+Senegal = nba.loc[nba.country == "Senegal"]['player_weight']
+Nigeria = nba.loc[nba.country == "Nigeria"]['player_weight']
+Cameroon = nba.loc[nba.country == "Cameroon"]['player_weight']
+Congo = nba.loc[nba.country == "Congo"]['player_weight']
+Democratic Republic of Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['player_weight']
+Haiti = nba.loc[nba.country == "Haiti"]['player_weight']
+
+#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
+bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
+
+plt.title('Professional NBA Team Comparison')
+plt.ylabel('NBA Weight Rating')
 
 for box in bp['boxes']:
     # change outline color
