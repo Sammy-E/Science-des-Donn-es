@@ -19,12 +19,12 @@ plt.savefig('histogram.png', dpi=300)
 plt.show() 
 
 #Height Histogram 
-bins = [40,50,60,70,80,90,100]
+bins = [160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235]
 plt.figure(figsize=(8,5))
 plt.hist(nba.player_height, bins=bins, color='#abcdef')
 plt.xticks(bins)
 plt.ylabel('Number of Players')
-plt.xlabel('Skill Level')
+plt.xlabel('Height in cm')
 plt.title('Distribution of Player Height')
 plt.savefig('histogram.png', dpi=300)
 plt.show()  
@@ -40,7 +40,7 @@ plt.title('Distribution of Player Weight')
 plt.savefig('histogram.png', dpi=300)
 plt.show() 
 
----------------------------
+#---------------------------
 
 #Age Box and Whiskers Chart 
 plt.figure(figsize=(5,8), dpi=100)
@@ -54,11 +54,11 @@ Senegal = nba.loc[nba.country == "Senegal"]['age']
 Nigeria = nba.loc[nba.country == "Nigeria"]['age']
 Cameroon = nba.loc[nba.country == "Cameroon"]['age']
 Congo = nba.loc[nba.country == "Congo"]['age']
-Democratic Republic of Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['age']
+Democratic_Republic_of_Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['age']
 Haiti = nba.loc[nba.country == "Haiti"]['age']
 
-#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
-bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
+#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic_Republic_of_Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
+bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic_Republic_of_Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
 
 plt.title('Professional NBA Team Comparison')
 plt.ylabel('NBA Age Comparison')
@@ -85,11 +85,11 @@ Senegal = nba.loc[nba.country == "Senegal"]['player_height']
 Nigeria = nba.loc[nba.country == "Nigeria"]['player_height']
 Cameroon = nba.loc[nba.country == "Cameroon"]['player_height']
 Congo = nba.loc[nba.country == "Congo"]['player_height']
-Democratic Republic of Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['player_height']
+Democratic_Republic_of_Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['player_height']
 Haiti = nba.loc[nba.country == "Haiti"]['player_height']
 
-#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
-bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
+#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic_Republic_of_Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
+bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic_Republic_of_Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
 
 plt.title('Professional NBA Team Comparison')
 plt.ylabel('NBA Height Rating')
@@ -116,11 +116,11 @@ Senegal = nba.loc[nba.country == "Senegal"]['player_weight']
 Nigeria = nba.loc[nba.country == "Nigeria"]['player_weight']
 Cameroon = nba.loc[nba.country == "Cameroon"]['player_weight']
 Congo = nba.loc[nba.country == "Congo"]['player_weight']
-Democratic Republic of Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['player_weight']
+Democratic_Republic_of_Congo = nba.loc[nba.country == "Democratic Republic of Congo"]['player_weight']
 Haiti = nba.loc[nba.country == "Haiti"]['player_weight']
 
-#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
-bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic Republic of Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
+#bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic_Republic_of_Congo, Haiti], labels=['a','b','c','d','e','f','g','h','i'], boxprops=dict(facecolor='red'))
+bp = plt.boxplot([Egypt, Tunisia, Mali, Senegal, Nigeria, Cameroon, Congo, Democratic_Republic_of_Congo, Haiti], labels=['Egypt','Tunisia','Mali','Senegal','Nigeria','Cameroon','Congo','Democratic Republic of Congo','Haiti'], patch_artist=True, medianprops={'linewidth': 2})
 
 plt.title('Professional NBA Team Comparison')
 plt.ylabel('NBA Weight Rating')
