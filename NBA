@@ -43,7 +43,7 @@ plt.show()
 #---------------------------
 
 #Age Box and Whiskers Chart 
-plt.figure(figsize=(5,8), dpi=100)
+plt.figure(figsize=(18,9), dpi=100)
 
 plt.style.use('default')
 
@@ -74,7 +74,7 @@ for box in bp['boxes']:
 plt.show() 
 
 #Height Box and Whiskers Chart 
-plt.figure(figsize=(5,8), dpi=100)
+plt.figure(figsize=(18,9), dpi=100)
 
 plt.style.use('default')
 
@@ -105,7 +105,7 @@ for box in bp['boxes']:
 plt.show() 
 
 #Weight Box and Whiskers Chart 
-plt.figure(figsize=(5,8), dpi=100)
+plt.figure(figsize=(18,9), dpi=100)
 
 plt.style.use('default')
 
