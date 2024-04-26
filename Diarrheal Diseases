@@ -1,0 +1,81 @@
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv) 
+import os 
+for dirname, _, filenames in os.walk('/kaggle/input'): 
+    for filename in filenames: 
+        print(os.path.join(dirname, filename)) 
+import matplotlib.pyplot as plt
+
+# Entrée des données à partir d'un fichier csv 
+
+countries = ["Afghanistan", "African Region (WHO)", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas"]
+deaths_measures = ["Deaths - Invasive Non-typhoidal Salmonella (iNTS)", "Deaths - Interpersonal violence", "Deaths - Nutritional deficiencies", "Deaths - Acute hepatitis", "Deaths - Neoplasms", "Deaths - Measles", "Deaths - Digestive diseases", "Deaths - Cirrhosis and other chronic liver diseases", "Deaths - Chronic kidney disease", "Deaths - Cardiovascular diseases", "Deaths - Congenital birth defects", "Deaths - Lower respiratory infections", "Deaths - Neonatal preterm birth", "Deaths - Environmental heat and cold exposure", "Deaths - Neonatal sepsis and other neonatal infections", "Deaths - Exposure to forces of nature", "Deaths - Diabetes mellitus", "Deaths - Neonatal encephalopathy due to birth asphyxia and trauma", "Deaths - Meningitis", "Deaths - Other neonatal disorders", "Deaths - Whooping cough", "Deaths - Diarrheal diseases", "Deaths - Fire, heat, and hot substances", "Deaths - Road injuries", "Deaths - Tuberculosis", "Deaths - HIV/AIDS", "Deaths - Drowning", "Deaths - Malaria", "Deaths - Syphilis"]
+
+deaths_data = [
+    [48, 105, 1779, 718, 431, 8649, 477, 182, 211, 225, 12850, 20224, 6088, 5, 420, 0, 29, 1599, 1709, 7112, 2455, 3968, 131, 802, 808, 10, 776, 21, 123],
+    [26869, 4381, 170136, 3388, 17987, 311413, 17025, 3345, 4690, 14070, 159172, 574550, 211210, 971, 88481, 46, 1150, 223733, 120537, 100379, 71931, 686390, 9165, 28173, 78180, 67976, 16651, 447410, 54547],
+    [0, 5, 33, 3, 44, 176, 136, 10, 10, 51, 288, 1429, 397, 0, 5, 0, 1, 131, 72, 310, 25, 68, 11, 27, 4, 0, 34, 0, 10],
+    [16, 17, 316, 92, 182, 2599, 239, 77, 138, 586, 10486, 5070, 11900, 4, 445, 0, 25, 1977, 497, 3326, 628, 2666, 217, 1446, 94, 15, 310, 0, 163],
+    [0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 3, 3, 5, 0, 1, 0, 0, 4, 0, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [255, 62, 10013, 121, 335, 5331, 370, 72, 99, 322, 3386, 15912, 5567, 26, 1432, 0, 35, 3302, 2423, 3693, 2304, 28811, 249, 1859, 5420, 64, 815, 4096, 1363],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 6, 0, 1, 0, 0, 2, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [1, 75, 670, 15, 294, 13, 117, 27, 49, 360, 3182, 1388, 5904, 1, 1131, 2, 8, 1371, 395, 920, 30, 701, 95, 186, 94, 8, 254, 0, 50],
+    [0, 3, 3, 2, 39, 0, 56, 2, 1, 4, 466, 938, 751, 3, 206, 0, 0, 82, 6, 75, 0, 357, 70, 20, 13, 0, 59, 0, 0],
+    [0, 23, 1, 0, 62, 0, 10, 1, 3, 27, 547, 61, 523, 1, 51, 1, 1, 218, 39, 74, 0, 3, 14, 73, 1, 2, 74, 0, 1],
+    [0, 10, 0, 0, 21, 0, 13, 1, 1, 8, 237, 28, 173, 0, 6, 0, 0, 116, 13, 21, 0, 0, 3, 18, 0, 1, 14, 0, 0],
+    [0, 9, 131, 37, 108, 3, 81, 4, 19, 19, 1124, 7845, 1430, 3, 99, 0, 1, 1500, 100, 45, 317, 1556, 216, 38, 209, 2, 147, 0, 28],
+    [0, 1, 2, 0, 2, 0, 2, 0, 0, 1, 13, 11, 23, 0, 8, 0, 0, 13, 3, 10, 0, 3, 1, 1, 0, 1, 2, 0, 0]
+]
+
+# Préparation des données pour le tracé
+x = range(len(countries))
+width = 0.8 / len(deaths_measures)
+
+# Tracé
+plt.figure(figsize=(14, 8))
+
+for i in range(len(deaths_measures)):
+    plt.bar([pos + i * width for pos in x], [data[i] for data in deaths_data], width=width, label=deaths_measures[i])
+
+plt.xlabel('Countries')
+plt.ylabel('Number of Deaths')
+plt.title('Under 5 Deaths by Various Causes and Countries')
+plt.xticks([pos + (width * len(deaths_measures) / 2) for pos in x], countries, rotation=90)
+plt.legend(loc='upper right')
+plt.tight_layout()
+plt.show() 
+
+import matplotlib.pyplot as plt
+
+# Données
+countries = ["Bahamas", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso"]
+deaths_iNTS = [1, 466, 0, 15, 11, 2, 50, 0, 1, 42, 3, 1, 944, 0, 9, 157]
+
+# Tracé
+plt.figure(figsize=(10, 6))
+plt.scatter(countries, deaths_iNTS, color='blue')
+
+plt.title('Number of Deaths due to Invasive Non-typhoidal Salmonella (iNTS) by Country')
+plt.xlabel('Countries')
+plt.ylabel('Number of Deaths')
+plt.xticks(rotation=90)
+plt.grid(True)
+
+plt.tight_layout()
+plt.show() 
+
+import matplotlib.pyplot as plt
+
+# Données pour l'année 1990
+deaths_1990 = [68, 23, 365, 1, 8, 100, 407, 0, 162, 4, 1, 46, 0, 0, 917, 0, 0, 0, 0]
+
+countries = ["Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Cook Islands", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czechia"]
+
+# Tracé du graphique en camembert
+plt.figure(figsize=(10, 8))
+plt.pie(deaths_1990, labels=countries, autopct='%1.1f%%', startangle=140)
+plt.title('Distribuição das Mortes por País em 1990')
+plt.axis('equal')  # Garante que o gráfico de pizza seja desenhado como um círculo
+
+plt.show()
