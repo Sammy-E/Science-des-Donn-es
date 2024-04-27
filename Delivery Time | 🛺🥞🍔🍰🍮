@@ -1,0 +1,122 @@
+import numpy as np # l'algèbre linéaire
+import pandas as pd # traitement des données, CSV file I/O (e.g. pd.read_csv) 
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename)) 
+
+import numpy as np # Pour l'algèbre linéaire 
+import pandas as pd # Pour créer un dataframe 
+import matplotlib.pyplot as plt # Pour tracer des graphiques 
+import seaborn as sns # Pour créer des visualisations de données 
+
+# Création du dataframe en lisant le fichier csv.
+df = pd.read_csv('/kaggle/input/food-delivery-time/deliverytime.csv') 
+
+# Obtenons les cinq premières lignes du dataframe. 
+df.head() 
+
+# Obtenir des informations sur le type de données des colonnes, le nombre total de lignes et de colonnes.
+df.info() 
+
+# Obtenons le nom des colonnes catégorielles.
+cat_col = df.select_dtypes(include='object').columns 
+
+cat_col 
+
+# Obtenons le nom des colonnes numériques.
+num_col = df.drop(cat_col, axis=1).columns 
+
+# Voyons s'il y a des valeurs nulles présentes dans le dataframe.
+df.isnull().sum() 
+
+# Vérifions s'il existe des lignes dupliquées.
+df.duplicated().sum() 
+
+# Vérifions le nombre de catégories dans chaque colonne catégorielle.
+for col in cat_col:
+    print(df[col].value_counts())
+    print() 
+
+# Obtenons un résumé en cinq nombres pour les colonnes numériques.
+df.describe().transpose() 
+
+df.columns 
+
+# Visualisons la colonne catégorielle avec moins de catégories.
+plt.figure(dpi=100)
+sns.countplot(data=df,x='Type_of_order') 
+
+plt.figure(dpi=100)
+sns.countplot(data=df,x='Type_of_vehicle')
+# Nous pouvons voir que la plupart du temps, le véhicule de livraison utilisé est la moto, et le moins utilisé est le vélo. 
+
+# Visualisons les cinq principales catégories de la colonne catégorielle restante.
+ID_df = df['ID'].value_counts().reset_index()[:5] 
+
+ID_df.head() 
+
+sns.barplot(data=ID_df, x='ID', y='count') 
+
+Delivery_person_ID_df = df['Delivery_person_ID'].value_counts().reset_index()[:5] 
+
+Delivery_person_ID_df 
+
+sns.barplot(data=Delivery_person_ID_df, x='Delivery_person_ID', y='count')
+plt.xticks(rotation=90); 
+
+# Visualisons la corrélation entre les colonnes numériques.
+sns.heatmap(df[num_col].corr(), annot=True) 
+
+# Visualisons à quel point chaque colonne est liée au temps pris.
+time_taken_corr_df = df[num_col].corr()['Time_taken(min)'].reset_index().sort_values('Time_taken(min)')[:-1] 
+
+time_taken_corr_df 
+
+sns.barplot(data=time_taken_corr_df, x='index', y='Time_taken(min)')
+plt.title('Correlation Of Columns With Time Taken')
+plt.ylabel('Correlation')
+plt.xlabel('Column Names')
+plt.xticks(rotation=90);
+# La notation du livreur et l'âge du livreur semblent être corrélés avec une valeur de -0,3 chacun.
+
+df.columns 
+
+# Visualisons la localisation géographique.
+sns.scatterplot(data=df,x='Restaurant_longitude', y='Restaurant_latitude')
+sns.scatterplot(data=df,x='Delivery_location_longitude', y='Delivery_location_latitude')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude') 
+
+import math
+# Fonction pour calculer la distance entre deux points si nous avons la latitude et la longitude.
+def haversine(lat1, lon1, lat2, lon2):
+    # Convert latitude and longitude from degrees to radians
+    lat1 = math.radians(lat1)
+    lon1 = math.radians(lon1)
+    lat2 = math.radians(lat2)
+    lon2 = math.radians(lon2)
+
+    # Différences de latitude et de longitude
+    Δlat = lat2 - lat1
+    Δlon = lon2 - lon1
+
+    # La formule de Haversine
+    a = math.sin(Δlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(Δlon/2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+    R = 6371  # Earth's mean radius in kilometers
+    d = R * c
+
+    return d 
+
+df.columns 
+
+df['distance'] = np.vectorize(haversine)(df['Restaurant_latitude'], df['Restaurant_longitude'], df['Delivery_location_latitude'], df['Delivery_location_longitude']) 
+
+plt.figure(dpi=100)
+sns.kdeplot(data=df,x='Time_taken(min)', hue='Type_of_vehicle', fill=True)
+# La plupart des livraisons se font à moto et ont également un temps de livraison moyen beaucoup plus élevé par rapport aux autres moyens de livraison. 
+
+sns.histplot(data=df,x='Delivery_person_Age', bins=30)
+# La distribution semble être uniforme sauf pour le groupe d'âge entre 28 et 30 ans qui présente un nombre beaucoup plus élevé.
