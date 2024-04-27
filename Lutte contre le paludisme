@@ -1,0 +1,119 @@
+import numpy as np # l'algèbre linéaire
+import pandas as pd # traitement des données, lecture/écriture de fichiers csv (par exemple, pd.read_csv)
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename)) 
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+import plotly_express as px
+
+import warnings
+warnings.filterwarnings('ignore')
+
+import pycountry 
+
+df=pd.read_csv('/kaggle/input/global-malaria-deaths/global-malaria.csv') 
+
+df = df.set_index('Region') 
+
+df.head() 
+
+df.info() 
+
+df.index.unique() 
+
+df_region=df[df.index.isin(['African Region','East Asia & Pacific','Eastern Mediterranean Region','Europe & Central Asia','European Region',
+                             'G20','Latin America & Caribbean','Middle East & North Africa','North America','OECD Countries','Region of the Americas','South Asia',
+                            'South-East Asia Region','Sub-Saharan Africa','Western Pacific Region','World','World Bank High Income',
+                            'World Bank Low Income','World Bank Lower Middle Income', 'World Bank Upper Middle Income'])] 
+
+df_region.head() 
+
+df=df[~df.index.isin(['African Region','East Asia & Pacific','Eastern Mediterranean Region','Europe & Central Asia','European Region',
+                             'G20','Latin America & Caribbean','Middle East & North Africa','North America','OECD Countries','Region of the Americas','South Asia',
+                            'South-East Asia Region','Sub-Saharan Africa','Western Pacific Region','World','World Bank High Income',
+                            'World Bank Low Income','World Bank Lower Middle Income', 'World Bank Upper Middle Income'])] 
+
+df.head() 
+
+df.index 
+
+input_countries = df.index
+
+countries = {}
+for country in pycountry.countries:
+    countries[country.name] = country.alpha_3
+
+codes = [countries.get(country, 'Unknown code') for country in input_countries]
+
+print(codes) 
+
+df['country_code']=['AFG', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'ATG', 'ARG', 'ARM', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 
+'BTN', 'Unknown code', 'BIH', 'BWA', 'BRA', 'Unknown code', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR', 'CAN', 'Unknown code', 'CAF', 'TCD', 'CHL', 'CHN', 'COL', 'COM', 'COG', 
+'COK', 'CRI', 'Unknown code', 'HRV', 'CUB', 'CYP', 'CZE', 'Unknown code', 'DNK', 'DJI', 'DMA', 'DOM', 'ECU', 'EGY', 'SLV', 'Unknown code', 'GNQ', 'ERI', 'EST', 'SWZ', 
+'ETH', 'FJI', 'FIN', 'FRA', 'GAB', 'GMB', 'GEO', 'DEU', 'GHA', 'GRC', 'GRL', 'GRD', 'GUM', 'GTM', 'GIN', 'GNB', 'GUY', 'HTI', 'HND', 'HUN', 'ISL', 'IND', 'IDN', 
+'Unknown code', 'IRQ', 'IRL', 'ISR', 'ITA', 'JAM', 'JPN', 'JOR', 'KAZ', 'KEN', 'KIR', 'KWT', 'KGZ', 'Unknown code', 'LVA', 'LBN', 'LSO', 'LBR', 'LBY', 'LTU', 'LUX', 
+'MDG', 'MWI', 'MYS', 'MDV', 'MLI', 'MLT', 'MHL', 'MRT', 'MUS', 'MEX', 'Unknown code', 'Unknown code', 'MCO', 'MNG', 'MNE', 'MAR', 'MOZ', 'MMR', 'NAM', 'NRU', 'NPL', 
+'NLD', 'NZL', 'NIC', 'NER', 'NGA', 'NIU', 'Unknown code', 'MKD', 'Unknown code', 'MNP', 'NOR', 'OMN', 'PAK', 'PLW', 'Unknown code', 'PAN', 'PNG', 'PRY', 'PER', 'PHL', 
+'POL', 'PRT', 'PRI', 'QAT', 'ROU', 'Unknown code', 'RWA', 'KNA', 'LCA', 'VCT', 'WSM', 'SMR', 'STP', 'SAU', 'Unknown code', 'SEN', 'SRB', 'SYC', 'SLE', 'SGP', 'SVK', 
+'SVN', 'SLB', 'SOM', 'ZAF', 'Unknown code', 'SSD', 'ESP', 'LKA', 'SDN', 'SUR', 'SWE', 'CHE', 'Unknown code', 'Unknown code', 'TJK', 'Unknown code', 'THA', 'Unknown code', 
+'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TUV', 'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'Unknown code', 'URY', 'UZB', 'VUT', 'Unknown code', 'Unknown code', 'Unknown code', 
+'YEM', 'ZMB', 'ZWE'] 
+
+df[df['country_code']=='Unknown code'] 
+
+df['country_code']=['AFG', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'ATG', 'ARG', 'ARM', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 
+'BTN', 'BOL', 'BIH', 'BWA', 'BRA', 'Unknown code', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR', 'CAN', 'Unknown code', 'CAF', 'TCD', 'CHL', 'CHN', 'COL', 'COM', 'COG', 'COK', 
+'CRI', 'CIV', 'HRV', 'CUB', 'CYP', 'CZE', 'COD', 'DNK', 'DJI', 'DMA', 'DOM', 'ECU', 'EGY', 'SLV', 'GBR', 'GNQ', 'ERI', 'EST', 'SWZ', 'ETH', 'FJI', 'FIN', 'FRA', 'GAB', 
+'GMB', 'GEO', 'DEU', 'GHA', 'GRC', 'GRL', 'GRD', 'GUM', 'GTM', 'GIN', 'GNB', 'GUY', 'HTI', 'HND', 'HUN', 'ISL', 'IND', 'IDN', 'IRN', 'IRQ', 'IRL', 'ISR', 'ITA', 'JAM', 
+'JPN', 'JOR', 'KAZ', 'KEN', 'KIR', 'KWT', 'KGZ', 'LAO', 'LVA', 'LBN', 'LSO', 'LBR', 'LBY', 'LTU', 'LUX', 'MDG', 'MWI', 'MYS', 'MDV', 'MLI', 'MLT', 'MHL', 'MRT', 'MUS', 
+'MEX', 'Unknown code', 'Unknown code', 'MCO', 'MNG', 'MNE', 'MAR', 'MOZ', 'MMR', 'NAM', 'NRU', 'NPL', 'NLD', 'NZL', 'NIC', 'NER', 'NGA', 'NIU', 'Unknown code', 'MKD', 
+'Unknown code', 'MNP', 'NOR', 'OMN', 'PAK', 'PLW', 'Unknown code', 'PAN', 'PNG', 'PRY', 'PER', 'PHL', 'POL', 'PRT', 'PRI', 'QAT', 'ROU', 'Unknown code', 'RWA', 'KNA', 
+'LCA', 'VCT', 'WSM', 'SMR', 'STP', 'SAU', 'Unknown code', 'SEN', 'SRB', 'SYC', 'SLE', 'SGP', 'SVK', 'SVN', 'SLB', 'SOM', 'ZAF', 'Unknown code', 'SSD', 'ESP', 'LKA', 
+'SDN', 'SUR', 'SWE', 'CHE', 'Unknown code', 'Unknown code', 'TJK', 'TZA', 'THA', 'TLS', 'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TUV', 'UGA', 'UKR', 'ARE', 
+'GBR', 'USA', 'Unknown code', 'URY', 'UZB', 'VUT', 'VEN', 'VNM', 'Unknown code', 'YEM', 'ZMB', 'ZWE'] 
+
+df.describe() 
+
+df_region.loc[["World",'South-East Asia Region','African Region']].T.plot(figsize=(15,8)) 
+
+fig = px.choropleth(df,locations='country_code',color='1990',scope='world',
+                    range_color=(500,200000),title='Malaria Death 1990',height=800)
+fig.show() 
+
+fig = px.choropleth(df,locations='country_code',color='2019',scope='world',
+                    range_color=(500,200000),title='Malaria Death 2019',height=800)
+fig.show() 
+
+df['2019'].sort_values(ascending=True).tail(20).plot.barh(figsize=(15,8)) 
+
+df['increase']=df['2019']-df['1990']
+df['increase'].sort_values(ascending=True).tail(30).plot.barh(figsize=(15,8)) 
+
+# Afficher le graphique pour le Nigéria.
+df.loc["Nigeria",'1990':'2019'].plot(figsize=(15,8)) 
+
+df['increase'].sort_values(ascending=False).tail(30).plot.barh(figsize=(15,8)) 
+
+# Afficher le graphique pour l'Inde.
+df.loc["India",'1990':'2019'].plot(figsize=(15,8)) 
+
+df_region['worse%']=df_region['2019']/df_region['1990']*100
+df_region['worse%']=df_region['worse%'].apply(lambda x:round(x,2))
+df_region['worse%'].plot.barh(figsize=(15,8)) 
+
+df['worse%']=df['2019']/df['1990']*100
+df['worse%']=df['worse%'].apply(lambda x:round(x,2)) 
+
+df['worse%'].sort_values(ascending=False).head(30).plot.barh(figsize=(15,8)) 
+
+fig = px.choropleth(df,locations='country_code',color='worse%',scope='world',
+                    range_color=(0,500),title='Malaria Death 1990/2019',height=800)
+fig.show() 
+
+# Afficher le graphique pour la Mauritanie.
+df.loc["Mauritania",'1990':'2019'].plot(figsize=(15,8))
