@@ -92,7 +92,7 @@ plt.ylabel('Latitude')
 import math
 # Fonction pour calculer la distance entre deux points si nous avons la latitude et la longitude.
 def haversine(lat1, lon1, lat2, lon2):
-    # Convert latitude and longitude from degrees to radians
+    # Convertir la latitude et la longitude de degrés en radians.
     lat1 = math.radians(lat1)
     lon1 = math.radians(lon1)
     lat2 = math.radians(lat2)
