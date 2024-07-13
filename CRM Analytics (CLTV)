@@ -71,141 +71,148 @@ def replace_with_thresholds(dataframe, variable):
     dataframe.loc[(dataframe[variable] > up_limit), variable] = up_limit 
 
 
-# Filter the dataframe for the France
+# Filter the dataframe for France
 df_fr = df[df['Country'] == 'France'] 
 
 
-
+# Remove rows with cancelled orders (Invoice containing 'C')
 df_fr = df_fr[~df_fr['Invoice'].str.contains('C', na=False)] 
 
 
-
+# Remove rows with non-positive prices 
 df_fr = df_fr[df_fr['Price'] > 0] 
 
 
-
+# Replace outliers in 'Price' and 'Quantity' columns 
 replace_with_thresholds(df_fr, 'Price')
 replace_with_thresholds(df_fr, 'Quantity') 
 
 
-
+# Display the first few rows of the filtered dataframe 
 df_fr.head() 
 
 
-
+# Calculate the total price for each row 
 df_fr['TotalPrice'] = df_fr['Quantity'] * df_fr['Price'] 
 
 
-
+# Display rows for a specific invoice 
 df_fr[df_fr['Invoice'] == 536365] 
 
 
-
+# Find the maximum invoice date
 df_fr['InvoiceDate'].max() 
 
 
-
+# Set a reference date for recency calculation
 today_date = dt.datetime(2011, 12, 11) 
 
 
-
+# Check the initial dataframe structure again 
 df.head() 
 
 
-
+# Check the data types of each column
 df.dtypes 
 
 
-
+# Aggregate data by 'Customer ID' 
 df_fr = df_fr.groupby('Customer ID').agg({'TotalPrice':'sum',
                               'InvoiceDate': [lambda date: (date.max()-date.min()).days,
                                               lambda date: (today_date - date.min()).days],
                               'Invoice': lambda Invoice: Invoice.nunique()}) 
 
 
-
+# Display the first few rows of the aggregated dataframe 
 df_fr.head() 
 
 
-
+# Flatten multi-level column index 
 df_fr.columns.droplevel(0) 
 
 
-
+# Rename the columns
 df_fr.columns = ['monetary', 'recency', 'T', 'frequency'] 
 
 
-
+# Display the first few rows with new column names 
 df_fr.head() 
 
 
-
+# Calculate average monetary value per transaction 
 df_fr['monetary'] = df_fr['monetary'] / df_fr['frequency']
-df_fr = df_fr[df_fr['frequency'] > 1]
-df_fr['recency'] = df_fr['recency'] / 7
-df_fr['T'] = df_fr['T'] / 7
+df_fr = df_fr[df_fr['frequency'] > 1] # Keep customers with more than one purchase
+df_fr['recency'] = df_fr['recency'] / 7 # Convert recency to weeks
+df_fr['T'] = df_fr['T'] / 7 # Convert T to weeks
+
+# Fit the BetaGeo model 
 bgf = BetaGeoFitter()
 bgf.fit(df_fr['frequency'], df_fr['recency'], df_fr['T']) 
 
 
-
+# Display the summary of the BetaGeo model
 bgf.summary 
 
 
-
+# Plot the transactions per period
 plot_period_transactions(bgf) 
 
 
-
+# Predict the expected number of purchases up to a certain time 
 bgf.conditional_expected_number_of_purchases_up_to_time(1, df_fr['frequency'], df_fr['recency'], df_fr['T']).sort_values(ascending=False).head(10) 
 
 
-
+# Predict the expected number of purchases in the next 6 months 
 df_fr['expected_purch_6month'] = bgf.predict(4*6, df_fr['frequency'], df_fr['recency'], df_fr['T']) 
 
 
-
+# Display the top customers by expected purchases 
 df_fr.sort_values(by='expected_purch_6month', ascending= False).head() 
 
 
-
+# Fit the GammaGamma model 
 ggf = GammaGammaFitter(penalizer_coef=0.01) 
 ggf.fit(df_fr['frequency'], df_fr['monetary']) 
 
 
-
+# Display the summary of the GammaGamma model
 ggf.summary 
 
 
-
+# Predict the expected average profit per customer 
 ggf.conditional_expected_average_profit(df_fr['frequency'], df_fr['monetary']).sort_values(ascending=False).head(10) 
 
-
-
 #########
+# Calculate the expected average profit for each customer 
 df_fr['expected_average_profit'] = ggf.conditional_expected_average_profit(df_fr['frequency'], df_fr['monetary'])
 ######### 
 
+# Calculate customer lifetime value (CLTV) 
 cltv = ggf.customer_lifetime_value(bgf, df_fr['frequency'], df_fr['recency'], df_fr['T'], df_fr['monetary'], time=6, freq='W') 
 
+# Reset the index of the CLTV dataframe 
 cltv = cltv.reset_index() 
 
+# Merge the CLTV data with the original dataframe
 cltv_final = df_fr.merge(cltv, on='Customer ID', how='left') 
 
+# Sort customers by CLTV 
 cltv_final.sort_values(by='clv', ascending=False).head() 
 
+# Initialize a MinMaxScaler 
 scaler = MinMaxScaler(feature_range=(0, 1)) 
 
+# Display the first few rows of the final dataframe
 cltv_final.head() 
 
+# Fit the scaler on the CLTV values
 scaler.fit(cltv_final[['clv']]) 
 
-
-
+# Scale the CLTV values
 cltv_final['scaled_cltv'] = scaler.transform(cltv_final[['clv']]) 
 
+# Display the top customers by scaled CLTV
 cltv_final.sort_values(by='scaled_cltv', ascending=False).head() 
 
-
-
+# Display the bottom customers by scaled CLTV
 cltv_final.sort_values(by='scaled_cltv', ascending=False).tail()
