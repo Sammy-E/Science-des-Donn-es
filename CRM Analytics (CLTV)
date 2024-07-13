@@ -1,26 +1,32 @@
-pip install openpyxl 
-pip install lifetimes 
-pip install xlrd 
+# Install necessary libraries 
 
+pip install openpyxl # For reading Excel files
+pip install lifetimes # For customer lifetime value analysis
+pip install xlrd # For reading Excel files (older format)
+
+# Import necessary libraries
 import pandas as pd
 import numpy as np
 import datetime as dt
 from lifetimes import BetaGeoFitter
-from lifetimes import GammaGammaFitter
-from sklearn.preprocessing import MinMaxScaler
+from lifetimes import GammaGammaFitter # For fitting lifetime value models
+from sklearn.preprocessing import MinMaxScaler # For scaling data
 from lifetimes.plotting import plot_probability_alive_matrix, plot_frequency_recency_matrix
 from lifetimes.plotting import plot_calibration_purchases_vs_holdout_purchases, plot_period_transactions,plot_history_alive
+# For visualizing lifetime value models 
+
+# Set pandas display options for better readability
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.float_format', lambda x: '%.5f' % x) 
 
 
-
+# Read the Excel file
 df = pd.read_excel('/kaggle/input/uci-online-retail-ii-data-set/online_retail_II.xlsx', sheet_name='Year 2010-2011')
-df_ = df.copy() 
+df_ = df.copy() # Create a copy of the dataframe for backup
 
 
-
+# Function to check the dataframe
 def check_df(dataframe):
     print("################ Shape ####################")
     print(dataframe.shape)
@@ -35,20 +41,20 @@ def check_df(dataframe):
     print("############### Describe ###################")
     print(dataframe.describe().T)
 
+# Check the initial dataframe
 check_df(df) 
 
 
-
+# Check for missing values
 df.isnull().sum() 
 
 
-
+# Drop rows with missing values 
 df.dropna(inplace=True)
 df.isnull().sum() 
 
 
-
-
+# Function to calculate outlier thresholds 
 def outlier_thresholds(dataframe, variable):
     quartile1 = dataframe[variable].quantile(0.01)
     quartile3 = dataframe[variable].quantile(0.99)
@@ -58,43 +64,44 @@ def outlier_thresholds(dataframe, variable):
     return low_limit, up_limit
 
 
+# Function to replace outliers with thresholds
 def replace_with_thresholds(dataframe, variable):
     low_limit, up_limit = outlier_thresholds(dataframe, variable)
     dataframe.loc[(dataframe[variable] < low_limit), variable] = low_limit
     dataframe.loc[(dataframe[variable] > up_limit), variable] = up_limit 
 
 
-
-df_uk = df[df['Country'] == 'United Kingdom'] 
-
-
-
-df_uk = df_uk[~df_uk['Invoice'].str.contains('C', na=False)] 
+# Filter the dataframe for the France
+df_fr = df[df['Country'] == 'France'] 
 
 
 
-df_uk = df_uk[df_uk['Price'] > 0] 
+df_fr = df_fr[~df_fr['Invoice'].str.contains('C', na=False)] 
 
 
 
-replace_with_thresholds(df_uk, 'Price')
-replace_with_thresholds(df_uk, 'Quantity') 
+df_fr = df_fr[df_fr['Price'] > 0] 
 
 
 
-df_uk.head() 
+replace_with_thresholds(df_fr, 'Price')
+replace_with_thresholds(df_fr, 'Quantity') 
 
 
 
-df_uk['TotalPrice'] = df_uk['Quantity'] * df_uk['Price'] 
+df_fr.head() 
 
 
 
-df_uk[df_uk['Invoice'] == 536365] 
+df_fr['TotalPrice'] = df_fr['Quantity'] * df_fr['Price'] 
 
 
 
-df_uk['InvoiceDate'].max() 
+df_fr[df_fr['Invoice'] == 536365] 
+
+
+
+df_fr['InvoiceDate'].max() 
 
 
 
@@ -110,35 +117,35 @@ df.dtypes
 
 
 
-df_uk = df_uk.groupby('Customer ID').agg({'TotalPrice':'sum',
+df_fr = df_fr.groupby('Customer ID').agg({'TotalPrice':'sum',
                               'InvoiceDate': [lambda date: (date.max()-date.min()).days,
                                               lambda date: (today_date - date.min()).days],
                               'Invoice': lambda Invoice: Invoice.nunique()}) 
 
 
 
-df_uk.head() 
+df_fr.head() 
 
 
 
-df_uk.columns.droplevel(0) 
+df_fr.columns.droplevel(0) 
 
 
 
-df_uk.columns = ['monetary', 'recency', 'T', 'frequency'] 
+df_fr.columns = ['monetary', 'recency', 'T', 'frequency'] 
 
 
 
-df_uk.head() 
+df_fr.head() 
 
 
 
-df_uk['monetary'] = df_uk['monetary'] / df_uk['frequency']
-df_uk = df_uk[df_uk['frequency'] > 1]
-df_uk['recency'] = df_uk['recency'] / 7
-df_uk['T'] = df_uk['T'] / 7
+df_fr['monetary'] = df_fr['monetary'] / df_fr['frequency']
+df_fr = df_fr[df_fr['frequency'] > 1]
+df_fr['recency'] = df_fr['recency'] / 7
+df_fr['T'] = df_fr['T'] / 7
 bgf = BetaGeoFitter()
-bgf.fit(df_uk['frequency'], df_uk['recency'], df_uk['T']) 
+bgf.fit(df_fr['frequency'], df_fr['recency'], df_fr['T']) 
 
 
 
@@ -150,20 +157,20 @@ plot_period_transactions(bgf)
 
 
 
-bgf.conditional_expected_number_of_purchases_up_to_time(1, df_uk['frequency'], df_uk['recency'], df_uk['T']).sort_values(ascending=False).head(10) 
+bgf.conditional_expected_number_of_purchases_up_to_time(1, df_fr['frequency'], df_fr['recency'], df_fr['T']).sort_values(ascending=False).head(10) 
 
 
 
-df_uk['expected_purch_6month'] = bgf.predict(4*6, df_uk['frequency'], df_uk['recency'], df_uk['T']) 
+df_fr['expected_purch_6month'] = bgf.predict(4*6, df_fr['frequency'], df_fr['recency'], df_fr['T']) 
 
 
 
-df_uk.sort_values(by='expected_purch_6month', ascending= False).head() 
+df_fr.sort_values(by='expected_purch_6month', ascending= False).head() 
 
 
 
 ggf = GammaGammaFitter(penalizer_coef=0.01) 
-ggf.fit(df_uk['frequency'], df_uk['monetary']) 
+ggf.fit(df_fr['frequency'], df_fr['monetary']) 
 
 
 
@@ -171,19 +178,19 @@ ggf.summary
 
 
 
-ggf.conditional_expected_average_profit(df_uk['frequency'], df_uk['monetary']).sort_values(ascending=False).head(10) 
+ggf.conditional_expected_average_profit(df_fr['frequency'], df_fr['monetary']).sort_values(ascending=False).head(10) 
 
 
 
 #########
-df_uk['expected_average_profit'] = ggf.conditional_expected_average_profit(df_uk['frequency'], df_uk['monetary'])
+df_fr['expected_average_profit'] = ggf.conditional_expected_average_profit(df_fr['frequency'], df_fr['monetary'])
 ######### 
 
-cltv = ggf.customer_lifetime_value(bgf, df_uk['frequency'], df_uk['recency'], df_uk['T'], df_uk['monetary'], time=6, freq='W') 
+cltv = ggf.customer_lifetime_value(bgf, df_fr['frequency'], df_fr['recency'], df_fr['T'], df_fr['monetary'], time=6, freq='W') 
 
 cltv = cltv.reset_index() 
 
-cltv_final = df_uk.merge(cltv, on='Customer ID', how='left') 
+cltv_final = df_fr.merge(cltv, on='Customer ID', how='left') 
 
 cltv_final.sort_values(by='clv', ascending=False).head() 
 
